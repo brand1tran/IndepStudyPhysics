@@ -10,6 +10,14 @@ Particle::Particle(const sf::Vector2f& position, sf::Color color) {
     display_rect.setFillColor(color);
 }
 void Particle::collide(Particle* other) {
+    if(display_rect.getFillColor()==other->display_rect.getFillColor()){
+        //create attraction
+        //find center of mass of system
+        //center vector remains the same
+        //create attraction
+    }
+    float pi = 3.14159265359;
+    float diag = sqrtf(10);
     float x = display_rect.getPosition().x;
     float y = display_rect.getPosition().y;
     float otherx = other->display_rect.getPosition().x;
@@ -21,31 +29,6 @@ void Particle::collide(Particle* other) {
     float stheta = asin((y-othery)/r);
     float ctheta = acos((x-otherx)/r);
     
-    //stacking is not working properly, but it is ok
-    //first below second
-    if(y > othery and std::abs(other->dx) < 2 and std::abs(other->dy) < 2
-       and std::abs(dx) <= 1 and std::abs(dy) <= 0
-       ){
-        other->display_rect.setPosition(otherx, y-other->display_rect.getSize().y);
-        other->dx = 0;
-        other->dy = 0;
-    }
-    //second below first
-    else if(othery > y and std::abs(dx) < 2 and std::abs(dy) < 2
-       and std::abs(other->dx) < 2 and std::abs(other->dy) <= 0
-       ){
-        display_rect.setPosition(x, othery-display_rect.getSize().y);
-        dx = 0;
-        dy = 0;
-    }
-    //both equal y
-    else if(othery == y and std::abs(dx) < 2 and std::abs(dy) < 2
-        and std::abs(other->dx) < 2 and std::abs(other->dy) < 2
-             ){
-        display_rect.setPosition(x, y-other->display_rect.getSize().y);
-        dx = 0;
-        dy = 0;
-    }
     //Augment dx/dy
     float interx = dx*(x-otherx) + dy*(y-othery);
     float intery = dx*(-1*(y-othery)) + dy*(x-otherx);
@@ -69,14 +52,22 @@ void Particle::collide(Particle* other) {
     other->dx = vpotherx;
     other->dy = vpothery;
     
-    //loss of energy
-    //if hitting a stopped object
-    if(speed > 0 and other->speed == 0){
-        speed -= 1;
+    //unstuck them from e/o not working
+    /*
+    if(ctheta < pi/4){
+        other->display_rect.setPosition(x-Coltree::size-1, y+(diag*stheta));
     }
-    if(other->speed > 0 and speed == 0){
-        other->speed -= 1;
+    else if(stheta > pi/4){
+        other->display_rect.setPosition(x+(diag*ctheta), y-Coltree::size-1);
     }
+    else if(ctheta > 3*pi/4){
+        other->display_rect.setPosition(x+Coltree::size+1, y+(diag*stheta));
+        
+    }
+    else if(stheta < -1*pi/4){
+        other->display_rect.setPosition(x+(diag*ctheta), y+Coltree::size+1);
+    }
+    */
 }
 void Particle::draw(sf::RenderTarget& target, sf::RenderStates states) const{
     target.draw(display_rect, states);
