@@ -12,7 +12,6 @@
 		4EB072981F6AE28C005CC2B2 /* icon.png in Resources */ = {isa = PBXBuildFile; fileRef = 4EB072971F6AE28C005CC2B2 /* icon.png */; };
 		4EB072A01F6AE800005CC2B2 /* Particle.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4EB0729E1F6AE800005CC2B2 /* Particle.cpp */; };
 		4EB072A41F741732005CC2B2 /* ResourcePath.mm in Sources */ = {isa = PBXBuildFile; fileRef = 4EB0728B1F6AE28C005CC2B2 /* ResourcePath.mm */; };
-		4EB072AD1F9A4CE0005CC2B2 /* Player.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4EB072AB1F9A4CE0005CC2B2 /* Player.cpp */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -25,8 +24,6 @@
 		4EB072971F6AE28C005CC2B2 /* icon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = icon.png; sourceTree = "<group>"; };
 		4EB0729E1F6AE800005CC2B2 /* Particle.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Particle.cpp; sourceTree = "<group>"; };
 		4EB0729F1F6AE800005CC2B2 /* Particle.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = Particle.hpp; sourceTree = "<group>"; };
-		4EB072AB1F9A4CE0005CC2B2 /* Player.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Player.cpp; sourceTree = "<group>"; };
-		4EB072AC1F9A4CE0005CC2B2 /* Player.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = Player.hpp; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -66,8 +63,6 @@
 				4EB072891F6AE28C005CC2B2 /* Supporting Files */,
 				4EB0729E1F6AE800005CC2B2 /* Particle.cpp */,
 				4EB0729F1F6AE800005CC2B2 /* Particle.hpp */,
-				4EB072AB1F9A4CE0005CC2B2 /* Player.cpp */,
-				4EB072AC1F9A4CE0005CC2B2 /* Player.hpp */,
 			);
 			path = "Indep Study Physics Engine";
 			sourceTree = "<group>";
@@ -175,7 +170,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				4EB072AD1F9A4CE0005CC2B2 /* Player.cpp in Sources */,
 				4EB072A41F741732005CC2B2 /* ResourcePath.mm in Sources */,
 				4EB0728F1F6AE28C005CC2B2 /* main.cpp in Sources */,
 				4EB072A01F6AE800005CC2B2 /* Particle.cpp in Sources */,

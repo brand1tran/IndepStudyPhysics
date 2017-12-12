@@ -1,6 +1,8 @@
 //
-//Created by ##########
+//Created by Brando
 //Ideal Gas Branch
+//the bonds lists retains information it is given
+//bonds lists have problems of getting the input in event of a collision
 #include <iostream>
 #include <cmath>
 #include <SFML/Graphics.hpp>
@@ -9,7 +11,6 @@
 #include <SFML/Graphics/Font.hpp>
 #include "Particle.hpp"
 #include "ResourcePath.hpp"
-#include "Player.hpp"
 
 int main(int, char const**){
     //Constants
@@ -27,11 +28,15 @@ int main(int, char const**){
     };
     //Objects
     std::vector<Particle> bank;
-    for(int i = 0; i < 1000; i++){
+    std::vector<Particle> bonda;
+    std::vector<Particle> bondb;
+    for(int i = 0; i < 100; i++){
         int tempx = rand() % sWidth;
         int tempy = rand() % sHeight;
         
         int type = rand() % 3;
+        //testing value
+        type = 2;
         
         int r = element[type][0];
         int g = element[type][1];
@@ -86,7 +91,6 @@ int main(int, char const**){
                     bank[i].display_rect.setPosition(tempx, tempy);
                     bank[i].dx = 0.0;
                     bank[i].dy = 0.0;
-                    bank[i].speed = 5;
                 }
             }
         }
@@ -95,8 +99,29 @@ int main(int, char const**){
         for (int u=0;u<bank.size();u++) {
             tree.insert(&bank[u]);
         }
+        
+        //std::cout << bonda.size();
+        for(int i=0; i<bonda.size();i++){
+            std::cout << "fill tree bonds" << bonda.size() << "\n";
+            tree.bond1.push_back(&bonda[i]);
+            tree.bond2.push_back(&bondb[i]);
+            std::cout << "filled tree" << tree.bond1.size() << "\n";
+        }
+        bonda.clear();
+        bondb.clear();
+        //std::cout << "Calculate" << "\n";
         tree.calculate();
-
+        tree.attract();
+        //suspected source of error
+        std::cout << "Tree" << tree.bond1.size() << "\n";
+        for(int i=0; i<tree.bond1.size(); i++){
+            std::cout << "fill bonds" << tree.bond1.size() << "\n";
+            bonda.push_back(*tree.bond1[i]);
+            bondb.push_back(*tree.bond2[i]);
+        }
+        if(bonda.size() > 0){
+            //break;
+        }
         //Clear screen
         window.clear();
 
@@ -134,7 +159,7 @@ int main(int, char const**){
         }
         //update window
         window.display();
-        
+        std::cout << "--------------------------" << "\n";
     }
 
     return EXIT_SUCCESS;

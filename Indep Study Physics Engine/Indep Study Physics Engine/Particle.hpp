@@ -17,11 +17,11 @@ struct Particle {
     
     sf::RectangleShape display_rect;
     
-    float speed=5;
     float dx=0;
     float dy=0;
     
     void collide(Particle* other);
+    void attract(Particle* other);
     virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const;
 };
 //collision tree
@@ -32,6 +32,10 @@ struct Coltree {
     Coltree* ur=0;
     Coltree* lr=0;
     std::vector<Particle*> list;
+    void bond(Particle* el1, Particle* el2);
+    void attract();
+    std::vector<Particle*> bond1;
+    std::vector<Particle*> bond2;
     float top;
     float bottom;
     float left;
@@ -42,18 +46,5 @@ struct Coltree {
     void calculate();
     void calculate(std::vector<Particle*>&);
 };
-
-struct CollideBucket {
-    std::vector<Particle*> list;
-    void internalCollide();
-    void crossCollide(std::vector<Particle*>&);
-};
-struct AltCollide {
-    std::vector<CollideBucket> buckets;
-    void insert(Particle*);
-    AltCollide(int);
-    void calculate();
-};
-
 
 #endif /* Particle_hpp */

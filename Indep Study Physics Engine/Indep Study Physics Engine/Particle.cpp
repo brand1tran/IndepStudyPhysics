@@ -1,7 +1,6 @@
 //
 //  Particle.cpp
 //
-//issues: speed and components of velocity not related to each other
 #include "Particle.hpp"
 
 //Constructs with position vector and color
@@ -10,12 +9,7 @@ Particle::Particle(const sf::Vector2f& position, sf::Color color) {
     display_rect.setFillColor(color);
 }
 void Particle::collide(Particle* other) {
-    if(display_rect.getFillColor()==other->display_rect.getFillColor()){
-        //create attraction
-        //find center of mass of system
-        //center vector remains the same
-        //create attraction
-    }
+    std::cout << "collide" << "\n";
     float pi = 3.14159265359;
     float diag = sqrtf(10);
     float x = display_rect.getPosition().x;
@@ -28,7 +22,6 @@ void Particle::collide(Particle* other) {
     float theta = atan((y-othery)/(x-otherx));
     float stheta = asin((y-othery)/r);
     float ctheta = acos((x-otherx)/r);
-    
     //Augment dx/dy
     float interx = dx*(x-otherx) + dy*(y-othery);
     float intery = dx*(-1*(y-othery)) + dy*(x-otherx);
@@ -51,28 +44,15 @@ void Particle::collide(Particle* other) {
     dy = vpy;
     other->dx = vpotherx;
     other->dy = vpothery;
-    
-    //unstuck them from e/o not working
-    /*
-    if(ctheta < pi/4){
-        other->display_rect.setPosition(x-Coltree::size-1, y+(diag*stheta));
-    }
-    else if(stheta > pi/4){
-        other->display_rect.setPosition(x+(diag*ctheta), y-Coltree::size-1);
-    }
-    else if(ctheta > 3*pi/4){
-        other->display_rect.setPosition(x+Coltree::size+1, y+(diag*stheta));
-        
-    }
-    else if(stheta < -1*pi/4){
-        other->display_rect.setPosition(x+(diag*ctheta), y+Coltree::size+1);
-    }
-    */
 }
 void Particle::draw(sf::RenderTarget& target, sf::RenderStates states) const{
     target.draw(display_rect, states);
 }
+//trees are deleted?
 Coltree::Coltree(int depth,float t,float b,float l,float r) : top(t),bottom(b),left(l),right(r) {
+    std::vector<Particle*> bond1;
+    std::vector<Particle*> bond2;
+
     if (depth>0) {
         float midx = (left+right)/2.0;
         float midy = (top+bottom)/2.0;
@@ -137,48 +117,16 @@ void Coltree::calculate(std::vector<Particle*>& alternate) {
                 float y2=alternate[w]->display_rect.getPosition().y;
                 if ((y1>y2 and y1<y2+alternate[w]->display_rect.getSize().y) or (y2>y1 and y2<y1+list[i]->display_rect.getSize().y)) {
                     list[i]->collide(alternate[w]);
+                    if(list[i]->display_rect.getFillColor()==list[i2]->display_rect.getFillColor()){
+                        Coltree::bond(list[i],list[i2]);
+                        //std::cout << "bondbc " << bond1.size() << "\n";
+                    }
                 }
             }
         }
     }
+    //std::cout << "checkb" << bond1.size() << "\n";
 }
-/*
-void CollideBucket::crossCollide(std::vector<Particle *> & other) {
-    int i2=0;
-    for (int i=0;i<list.size();i++) {
-        for (int w=i2;w<other.size();w++) {
-            float x1=list[i]->display_rect.getPosition().x;
-            float x2=other[w]->display_rect.getPosition().x;
-            if (x2+list[i2]->display_rect.getSize().x<x1) {
-                i2=w;
-            } else if (x2>x1+list[i]->display_rect.getSize().x) {
-                break;
-            } else {
-                float y1=list[i]->display_rect.getPosition().y;
-                float y2=other[w]->display_rect.getPosition().y;
-                if ((y1>y2 and y1<y2+list[i2]->display_rect.getSize().y) or (y2>y1 and y2<y1+list[i]->display_rect.getSize().y)) {
-                    list[i]->collide(other[w]);
-                }
-            }
-        }
-    }
-}
-void CollideBucket::internalCollide() {
-    for (int i=0;i<list.size();i++) {
-        for (int i2=i+1;i2<list.size();i2++) {
-            if (list[i2]->display_rect.getPosition().x>list[i]->display_rect.getPosition().x+list[i]->display_rect.getSize().x) {
-                break;
-            }
-            float y1=list[i]->display_rect.getPosition().y;
-            float y2=list[i2]->display_rect.getPosition().y;
-            if ((y1>y2 and y1<y2+list[i2]->display_rect.getSize().y) or (y2>y1 and y2<y1+list[i]->display_rect.getSize().y)) {
-                list[i]->collide(list[i2]);
-                //list[i2]->collide(list[i]);
-            }
-        }
-    }
-}
-*/
 void Coltree::calculate() {
     for (int i=0;i<list.size();i++) {
         for (int i2=i+1;i2<list.size();i2++) {
@@ -189,7 +137,10 @@ void Coltree::calculate() {
             float y2=list[i2]->display_rect.getPosition().y;
             if ((y1>y2 and y1<y2+list[i2]->display_rect.getSize().y) or (y2>y1 and y2<y1+list[i]->display_rect.getSize().y)) {
                 list[i]->collide(list[i2]);
-                //list[i2]->collide(list[i]);
+                if(list[i]->display_rect.getFillColor()==list[i2]->display_rect.getFillColor()){
+                    Coltree::bond(list[i],list[i2]);
+                    //std::cout << "bondac " << bond1.size() << "\n";
+                }
             }
         }
     }
@@ -201,9 +152,38 @@ void Coltree::calculate() {
     if (ll) ll->calculate();
     if (ur) ur->calculate();
     if (lr) lr->calculate();
+    //std::cout << "checka" << bond1.size() << "\n";
 }
-
-
+//suspected source of error
+void Coltree::bond(Particle* el1, Particle* el2){
+    bond1.push_back(el1);
+    bond2.push_back(el2);
+    std::cout << "bond " << bond1.size() << "\n";
+}
+//attact only funcitons properly once
+void Coltree::attract(){
+    for(int i=0;i<bond1.size();i++){
+        std::cout << "attract" << "\n";
+        bond1[i]->display_rect.setFillColor(sf::Color(250,250,250));
+        bond2[i]->display_rect.setFillColor(sf::Color(250,250,250));
+        float pi = 3.14159265359;
+        float diag = sqrtf(10);
+        float x = bond1[i]->display_rect.getPosition().x;
+        float y = bond1[i]->display_rect.getPosition().y;
+        float otherx = bond2[i]->display_rect.getPosition().x;
+        float othery = bond2[i]->display_rect.getPosition().y;
+        //trig to find theta between the two particles
+        float d = pow((x-otherx),2) + pow((y-othery),2);
+        float r = pow(d,0.5);
+        float stheta = asin((y-othery)/r);
+        float ctheta = acos((x-otherx)/r);
+        //attract
+        bond1[i]->dx += r*cos(ctheta);
+        bond1[i]->dy += r*sin(stheta);
+        bond2[i]->dx -= r*cos(ctheta);
+        bond2[i]->dy -= r*sin(stheta);
+    }
+}
 
 
 
